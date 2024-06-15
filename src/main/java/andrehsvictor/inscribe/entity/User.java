@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +36,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Note> notes = new HashSet<>();
+
+    @OneToOne(mappedBy = "user")
+    private RefreshToken refreshToken;
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
