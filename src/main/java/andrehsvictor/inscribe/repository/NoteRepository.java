@@ -15,6 +15,6 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     @Query("SELECT n FROM Note n WHERE n.user = :user AND n.deleted = false")
     Page<Note> findAllByUser(User user, Pageable pageable);
 
-    @Query("SELECT n FROM Note n WHERE n.publicId = :publicId AND n.deleted = false")
-    Optional<Note> findByPublicId(String publicId);
+    @Query("SELECT n FROM Note n WHERE n.publicId = :publicId AND n.user = :user AND n.deleted = false")
+    Optional<Note> findByPublicIdAndUser(String publicId, User user);
 }
