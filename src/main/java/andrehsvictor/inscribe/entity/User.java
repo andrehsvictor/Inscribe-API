@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import andrehsvictor.inscribe.payload.response.UserResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +18,7 @@ import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = { "notes" })
+@ToString(exclude = "notes")
 @Entity
 @Table(name = "users")
 public class User {
@@ -37,5 +38,28 @@ public class User {
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.active = false;
+    }
+
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    public UserResponse toResponse() {
+        return new UserResponse(publicId, name, email, active, createdAt.toString(), updatedAt.toString());
+    }
 
 }
