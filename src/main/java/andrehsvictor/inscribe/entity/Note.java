@@ -3,6 +3,7 @@ package andrehsvictor.inscribe.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import andrehsvictor.inscribe.payload.response.NoteResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,4 +34,19 @@ public class Note {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Note(String title, String content, User user) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
+
+    public void delete() {
+        this.deleted = true;
+    }
+
+    public NoteResponse toResponse() {
+        return new NoteResponse(publicId, title, slug, content, createdAt.toString(), updatedAt.toString(), user.toResponse());
+    }
+
 }
