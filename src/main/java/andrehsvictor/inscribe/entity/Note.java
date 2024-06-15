@@ -25,7 +25,6 @@ public class Note {
 
     private String publicId = UUID.randomUUID().toString().replace("-", "");
     private String title;
-    private String slug;
     private String content;
     private boolean deleted = false;
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -41,12 +40,18 @@ public class Note {
         this.user = user;
     }
 
+    public void update(String title, String content) {
+        this.title = title == null ? this.title : title;
+        this.content = content == null ? this.content : content;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void delete() {
         this.deleted = true;
     }
 
     public NoteResponse toResponse() {
-        return new NoteResponse(publicId, title, slug, content, createdAt.toString(), updatedAt.toString(), user.toResponse());
+        return new NoteResponse(publicId, title, content, createdAt.toString(), updatedAt.toString());
     }
 
 }
