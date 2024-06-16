@@ -16,6 +16,6 @@ public class Payload<T> {
     private Integer size;
     private Long totalElements;
     private Integer totalPages;
-    private boolean last;
+    private Boolean last;
     private String sort;
 }
