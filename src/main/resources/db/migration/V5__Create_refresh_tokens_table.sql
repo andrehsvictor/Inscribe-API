@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    UNIQUE (token)
+    UNIQUE (value)
 );
