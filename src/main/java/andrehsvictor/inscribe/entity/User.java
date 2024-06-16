@@ -19,7 +19,7 @@ import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = "notes")
+@ToString(exclude = { "notes", "refreshToken", "password", "verificationCode" })
 @Entity
 @Table(name = "users")
 public class User {
@@ -40,8 +40,14 @@ public class User {
     @OneToOne(mappedBy = "user")
     private RefreshToken refreshToken;
 
+    @OneToOne(mappedBy = "user")
+    private VerificationCode verificationCode;
+
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public User() {
+    }
 
     public User(String name, String email, String password) {
         this.name = name;
