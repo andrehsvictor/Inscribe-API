@@ -1,8 +1,12 @@
 package andrehsvictor.inscribe.exception;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import andrehsvictor.inscribe.payload.Payload;
@@ -25,6 +29,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(Payload.<Void>builder()
                         .success(false)
                         .message(e.getMessage())
+                        .build());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return ResponseEntity.status(400)
+                .body(Payload.<Void>builder()
+                        .success(false)
+                        .message(ex.getBindingResult().getFieldError().getDefaultMessage())
                         .build());
     }
 }
