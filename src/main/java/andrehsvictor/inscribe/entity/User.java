@@ -34,13 +34,13 @@ public class User {
     private boolean active = false;
     private boolean deleted = false;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Note> notes = new HashSet<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
     private RefreshToken refreshToken;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
     private VerificationCode verificationCode;
 
     private LocalDateTime createdAt = LocalDateTime.now();
