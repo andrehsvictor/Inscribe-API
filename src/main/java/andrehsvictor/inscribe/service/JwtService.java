@@ -1,8 +1,6 @@
 package andrehsvictor.inscribe.service;
 
 import java.time.Instant;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -37,12 +35,12 @@ public class JwtService {
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .createdAt(Date.from(claims.getIssuedAt()).toString())
-                .expiresAt(Date.from(claims.getExpiresAt()).toString())
+                .createdAt(claims.getIssuedAt().toString())
+                .expiresAt(claims.getExpiresAt().toString())
                 .build();
     }
 
-    public TokenResponse refresh(String refreshToken) {
+    public TokenResponse generate(String refreshToken) {
         Authentication authentication = refreshTokenService.retrieveAuthenticationByRefreshToken(refreshToken);
         return generate(authentication);
     }
