@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import andrehsvictor.inscribe.exception.InscribeException;
 import andrehsvictor.inscribe.payload.Payload;
+import andrehsvictor.inscribe.payload.request.RefreshRequest;
 import andrehsvictor.inscribe.payload.request.SigninRequest;
 import andrehsvictor.inscribe.payload.response.TokenResponse;
 
@@ -20,21 +21,29 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private VerificationService verificationService;
+
+    @Autowired
     private JwtService jwtService;
 
-    public Payload<TokenResponse> authenticate(SigninRequest signInRequest) {
-        UsernamePasswordAuthenticationToken authenticationToken = createAuthenticationToken(signInRequest);
+    public Payload<TokenResponse> signin(SigninRequest signinRequest) {
+        UsernamePasswordAuthenticationToken authenticationToken = createAuthenticationToken(signinRequest);
         Authentication authentication = tryToAuthenticate(authenticationToken);
         TokenResponse tokenResponse = jwtService.generate(authentication);
-        return buildPayload("Authentication successful", tokenResponse);
+        return createPayload("Authentication successful", tokenResponse);
     }
 
-    public Payload<TokenResponse> refresh(String refreshToken) {
-        TokenResponse tokenResponse = jwtService.refresh(refreshToken);
-        return buildPayload("Token refreshed successfully", tokenResponse);
+    public Payload<TokenResponse> refresh(RefreshRequest refreshRequest) {
+        TokenResponse tokenResponse = jwtService.generate(refreshRequest.getRefreshToken());
+        return createPayload("Token refreshed successfully", tokenResponse);
     }
 
-    private <T> Payload<T> buildPayload(String message, T data) {
+    public Payload<Void> verify(String code) {
+        verificationService.verify(code);
+        return createPayload("Email verified successfully", null);
+    }
+
+    private <T> Payload<T> createPayload(String message, T data) {
         return Payload.<T>builder()
                 .success(true)
                 .message(message)
@@ -54,8 +63,6 @@ public class AuthenticationService {
             throw new InscribeException("Invalid email or password", 401);
         } catch (DisabledException e) {
             throw new InscribeException("User is disabled", 401);
-        } catch (Exception e) {
-            throw new InscribeException("Authentication failed", 401);
         }
     }
 }
