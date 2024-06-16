@@ -35,3 +35,4 @@ build/
 keys/
 META-INF/
 .env
+logs/
