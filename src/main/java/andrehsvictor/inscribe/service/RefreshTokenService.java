@@ -25,7 +25,7 @@ public class RefreshTokenService {
     @Autowired
     private UserRepository userRepository;
 
-    private Long expirationMillis = 2_592_000_000L;
+    private Long expirationMillis = 2_592_000_000L; // 30 days
 
     public String generate(Authentication authentication) {
         User user = findUserByEmail(authentication);
