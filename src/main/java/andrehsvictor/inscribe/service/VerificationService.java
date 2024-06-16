@@ -33,21 +33,16 @@ public class VerificationService {
         verificationCodeRepository.delete(verificationCode);
     }
 
-    private void activateUser(VerificationCode verificationCode) {
-        User user = verificationCode.getUser();
-        user.activate();
-        userRepository.save(user);
+    public void resend(String code) {
+        VerificationCode verificationCode = findByCode(code);
+        verificationCodeRepository.delete(verificationCode);
+        sendVerificationEmail(verificationCode.getUser());
     }
 
-    private VerificationCode findByCode(String code) {
-        return verificationCodeRepository.findByCode(code)
-                .orElseThrow(() -> new InscribeException("Invalid verification code", 400));
-    }
-
-    public void sendVerificationCode(User user) {
+    public void sendVerificationEmail(User user) {
         LocalDateTime expiration = LocalDateTime.now().plus(expirationMillis, ChronoUnit.MILLIS);
-        VerificationCode verificationCode = new VerificationCode(user, expiration);
-        verificationCode = verificationCodeRepository.save(verificationCode);
+
+        VerificationCode verificationCode = createOrUpdateVerificationCode(user, expiration);
 
         String subject = "Inscribe - Verify your account";
         String text = """
@@ -57,5 +52,28 @@ public class VerificationService {
                 """.formatted(user.getName(), verificationCode.getCode());
 
         emailService.send(user.getEmail(), subject, text);
+    }
+
+    private VerificationCode createOrUpdateVerificationCode(User user, LocalDateTime expiration) {
+        VerificationCode verificationCode;
+        if (user.getVerificationCode() != null) {
+            verificationCode = user.getVerificationCode();
+            verificationCode.update(expiration);
+        } else {
+            verificationCode = new VerificationCode(user, expiration);
+        }
+        verificationCode = verificationCodeRepository.save(verificationCode);
+        return verificationCode;
+    }
+
+    private void activateUser(VerificationCode verificationCode) {
+        User user = verificationCode.getUser();
+        user.activate();
+        userRepository.save(user);
+    }
+
+    private VerificationCode findByCode(String code) {
+        return verificationCodeRepository.findByCode(code)
+                .orElseThrow(() -> new InscribeException("Invalid verification code", 400));
     }
 }
