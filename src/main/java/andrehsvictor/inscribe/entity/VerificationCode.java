@@ -42,6 +42,11 @@ public class VerificationCode {
         this.expiresAt = expiresAt;
     }
 
+    public void update(LocalDateTime expiresAt) {
+        code = String.valueOf((int) (Math.random() * 900000) + 100000);
+        this.expiresAt = expiresAt;
+    }
+
     public void validate() {
         if (LocalDateTime.now().isAfter(expiresAt)) {
             throw new InscribeException("Verification code expired", 401);
