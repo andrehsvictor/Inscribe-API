@@ -36,6 +36,9 @@ public class RefreshToken {
     private LocalDateTime expiresAt;
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    public RefreshToken() {
+    }
+
     public RefreshToken(User user, LocalDateTime expiresAt) {
         this.user = user;
         this.expiresAt = expiresAt;
