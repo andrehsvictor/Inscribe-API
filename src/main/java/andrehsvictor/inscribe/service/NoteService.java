@@ -37,14 +37,14 @@ public class NoteService {
     public Payload<NoteResponse> findByPublicIdAndUser(JwtAuthenticationToken jwt, String publicId) {
         User user = findUserByEmail(jwt);
         Note note = findByPublicIdAndUser(publicId, user);
-        return buildPayload(note.toResponse(), "Note retrieved successfully");
+        return createPayload(note.toResponse(), "Note retrieved successfully");
     }
 
     public Payload<NoteResponse> create(JwtAuthenticationToken jwt, NoteRequest noteRequest) {
         User user = findUserByEmail(jwt);
         Note note = noteRequest.toEntity(user);
         note = noteRepository.save(note);
-        return buildPayload(note.toResponse(), "Note created successfully");
+        return createPayload(note.toResponse(), "Note created successfully");
     }
 
     public Payload<NoteResponse> update(JwtAuthenticationToken jwt, String publicId, NoteRequest noteRequest) {
@@ -52,7 +52,7 @@ public class NoteService {
         Note note = findByPublicIdAndUser(publicId, user);
         note.update(noteRequest.getTitle(), noteRequest.getContent());
         note = noteRepository.save(note);
-        return buildPayload(note.toResponse(), "Note updated successfully");
+        return createPayload(note.toResponse(), "Note updated successfully");
     }
 
     public void delete(JwtAuthenticationToken jwt, String publicId) {
@@ -62,7 +62,7 @@ public class NoteService {
         noteRepository.save(note);
     }
 
-    private <T> Payload<T> buildPayload(T data, String message) {
+    private <T> Payload<T> createPayload(T data, String message) {
         return Payload.<T>builder()
                 .success(true)
                 .message(message)
