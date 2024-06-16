@@ -12,6 +12,7 @@ import andrehsvictor.inscribe.exception.InscribeException;
 import andrehsvictor.inscribe.payload.Payload;
 import andrehsvictor.inscribe.payload.request.RefreshRequest;
 import andrehsvictor.inscribe.payload.request.SigninRequest;
+import andrehsvictor.inscribe.payload.request.SignupRequest;
 import andrehsvictor.inscribe.payload.response.TokenResponse;
 
 @Service
@@ -22,6 +23,9 @@ public class AuthenticationService {
 
     @Autowired
     private VerificationService verificationService;
+
+    @Autowired
+    private SignupService signupService;
 
     @Autowired
     private JwtService jwtService;
@@ -38,9 +42,19 @@ public class AuthenticationService {
         return createPayload("Token refreshed successfully", tokenResponse);
     }
 
+    public Payload<Void> signup(SignupRequest signupRequest) {
+        signupService.signup(signupRequest);
+        return createPayload("User registered successfully. Check your email for verification code", null);
+    }
+
     public Payload<Void> verify(String code) {
         verificationService.verify(code);
         return createPayload("Email verified successfully", null);
+    }
+
+    public Payload<Void> resend(String code) {
+        verificationService.resend(code);
+        return createPayload("Verification email resent successfully", null);
     }
 
     private <T> Payload<T> createPayload(String message, T data) {
