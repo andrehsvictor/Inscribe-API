@@ -29,12 +29,12 @@ public class NoteController {
     private NoteService noteService;
 
     @GetMapping
-    public ResponseEntity<Payload<List<NoteResponse>>> findAllByUser(JwtAuthenticationToken jwt, Pageable pageable) {
+    public ResponseEntity<Payload<List<NoteResponse>>> findAll(JwtAuthenticationToken jwt, Pageable pageable) {
         return ResponseEntity.ok(noteService.findAllByUser(jwt, pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Payload<NoteResponse>> findByPublicIdAndUser(JwtAuthenticationToken jwt,
+    public ResponseEntity<Payload<NoteResponse>> findById(JwtAuthenticationToken jwt,
             @PathVariable String id) {
         return ResponseEntity.ok(noteService.findByPublicIdAndUser(jwt, id));
     }
@@ -42,7 +42,7 @@ public class NoteController {
     @PostMapping
     public ResponseEntity<Payload<NoteResponse>> create(JwtAuthenticationToken jwt,
             @RequestBody @Valid NoteRequest noteRequest) {
-        return ResponseEntity.ok(noteService.create(jwt, noteRequest));
+        return ResponseEntity.status(201).body(noteService.create(jwt, noteRequest));
     }
 
     @PutMapping("/{id}")
