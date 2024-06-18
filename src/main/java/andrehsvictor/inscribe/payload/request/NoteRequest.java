@@ -3,9 +3,11 @@ package andrehsvictor.inscribe.payload.request;
 import andrehsvictor.inscribe.entity.Note;
 import andrehsvictor.inscribe.entity.User;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class NoteRequest {
     @Size(min = 5, max = 50, message = "Title must be between 5 and 50 characters")
     private String title;
